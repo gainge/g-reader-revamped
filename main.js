@@ -1,4 +1,8 @@
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
+
+const SRC_DIR = 'src'
+const INDEX_FILE = 'index.html'
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -8,8 +12,11 @@ function createWindow () {
       nodeIntegration: true
     }
   })
+  
+  // Switch to dynamic pathing and loadURL
+  const indexFile = path.join('file://', __dirname, SRC_DIR, INDEX_FILE)
 
-  win.loadFile('index.html')
+  win.loadURL(indexFile)
 }
 
 app.whenReady().then(createWindow)
