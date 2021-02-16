@@ -19,6 +19,21 @@ function createWindow () {
   const indexFile = path.join('file://', __dirname, SRC_DIR, INDEX_FILE)
 
   win.loadURL(indexFile)
+
+  ipcMain.on('open-file-dialog', async (event) => {
+    const result = await dialog.showOpenDialog(win, {
+      properties: ['openDirectory']
+    });
+
+    console.log('directories selected', result.filePaths)
+
+    if (result && result.filePaths) { // TODO: also check dir is not empty somewhere? maybe not in main
+      event.sender.send('selected-directory', result.filePaths)
+    } else {
+      dialog.showErrorBox('Directory Selection', `Something went wrong selecting directory ${result.filePaths}`)
+    }
+  })
+
 }
 
 app.whenReady().then(createWindow)
