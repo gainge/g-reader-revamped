@@ -3,6 +3,7 @@ const path = require('path')
 
 const SRC_DIR = 'src'
 const INDEX_FILE = 'index.html'
+const READER_FILE = 'reader.html'
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -32,6 +33,34 @@ function createWindow () {
     } else {
       dialog.showErrorBox('Directory Selection', `Something went wrong selecting directory ${result.filePaths}`)
     }
+  })
+
+  ipcMain.on('show-reader-window', (e, imageDir) => {
+    const readerWindowPath = path.join('file://', __dirname, SRC_DIR, READER_FILE)
+    let win = new BrowserWindow({
+      width: 1920, 
+      height: 1080, 
+      frame: false,
+      fullscreen: true,
+      webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
+        contextIsolation: false,
+        show: false,
+      }
+    })
+
+    win.on('close', function () { win = null })
+    win.loadURL(readerWindowPath)
+
+    win.webContents.once('dom-ready', () => {
+      win.webContents.send('reader-path', imageDir);
+    })
+
+    win.once('ready-to-show', () => {
+      win.show();
+    })
+    
   })
 
 }
