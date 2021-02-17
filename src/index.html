@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
-<body style="background: white;">
-    <h1>GReader</h1>
+<body>
+    <div id="header-container">
+        <h1 id="header">GReader</h1>
+    </div>
     <hr>
     <button id="select-dir-button">Select Directory</button>
     <br>
-    <br>
     <p id="selection-label">Selected: <span id="directory-path"></span></p>
-    <br>
     <button id="open-reader-button">Open Reader</button>
+
+    <br>
+    <img id="landing-img" src="../assets/images/tsuyu-1.jpg" alt="tsuyu">
 
     <script>require('./index.js')</script>
 </body>
