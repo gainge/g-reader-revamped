@@ -8,8 +8,28 @@
     <link rel="stylesheet" href="../assets/css/reader.css">
 </head>
 <body>
-    <p id='temp'>This is the reader!</p>
-    <button id="close-reader-button">Close Window</button>
+    <div id="page">
+        <div id="reader-image-container">
+            <img id="panel-2" alt="panel-2" class="reader-image hidden">
+            <img id="panel-1" alt="panel-1" class="reader-image hidden">
+            <!-- <img src="../res/test_images/0085.jpg" alt="panel-1" class="reader-image">
+            <img src="../res/test_images/0084.jpg" alt="panel-1" class="reader-image"> -->
+        </div>
+
+        <!-- <div id="control-panel-container">
+            
+        </div> -->
+        <div id="control-panel">
+            <p id='directory-label'>This is the reader!</p>
+            <div id="reader-controls">
+                <button>one</button>
+                <button>two</button>
+                <button>three</button>
+                <button>four</button>
+            </div>
+            <button id="close-reader-button">Close Window</button>
+        </div>
+    </div>
 
     <script>require('./reader.js')</script>
 </body>
