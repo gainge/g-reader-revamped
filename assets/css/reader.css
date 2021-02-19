@@ -81,3 +81,19 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#reader-controls button {
+    margin: 0rem 2rem;
+}
+
+#page-control-container {
+    display: flex;
+    margin: 0rem 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#page-num-input {
+    height: 1rem;
+    width: 2rem;
+}
