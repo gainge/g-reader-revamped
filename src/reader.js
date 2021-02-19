@@ -22,6 +22,10 @@ const page1 = document.getElementById('page-1');
 const page2 = document.getElementById('page-2');
 const closeButton = document.getElementById('close-reader-button');
 const toggleDisplayButton = document.getElementById('toggle-display-button');
+const pageNumInput = document.getElementById('page-num-input');
+const pageCountLabel = document.getElementById('page-count-label');
+const jumpPageButton = document.getElementById('jump-page-button');
+const pageControlForm = document.getElementById('page-control-container');
 
 closeButton.addEventListener('click', (e) => {
   closeWindow();
@@ -36,6 +40,39 @@ function closeWindow() {
   let window = remote.getCurrentWindow();
   window.close();
 }
+
+pageControlForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+  jumpPage()
+})
+
+jumpPageButton.addEventListener('click', (e) => {
+  jumpPage()
+})
+
+
+
+/* Helper Functions */
+
+function jumpPage() {
+  let pageVal = pageNumInput.value;
+
+  if (!isInt(pageVal)) return;
+
+  pageVal = Number(pageVal)
+  // Check bounds
+  if (pageVal < 0 || pageVal >= images.length) return;
+
+  // Otherwise we're good to jump
+  changePage(pageVal);
+}
+
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
+}
+
 
 function addShortcuts() {
   Mousetrap.bind('left', () => {showNextPage()});
@@ -119,7 +156,12 @@ ipcRenderer.on('reader-path', (e, imageDir) => {
     console.log(files)
     // Create our array of full image paths
     images = files.map((file) => path.join(imageDir, file))
+
+    // Set page count
+    pageCountLabel.innerHTML = images.length
+
     changePage(0); // Display the content!
+
     addShortcuts();
   })
 });
