@@ -12,5 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^11.2.3"
+  },
+  "dependencies": {
+    "electron-localshortcut": "^3.2.1",
+    "mousetrap": "^1.6.5"
   }
 }
