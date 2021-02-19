@@ -21,10 +21,16 @@ var images = null;
 const page1 = document.getElementById('page-1');
 const page2 = document.getElementById('page-2');
 const closeButton = document.getElementById('close-reader-button');
+const toggleDisplayButton = document.getElementById('toggle-display-button');
 
 closeButton.addEventListener('click', (e) => {
   closeWindow();
 });
+
+toggleDisplayButton.addEventListener('click', (e) => {
+  toggleDisplayMode();
+})
+toggleDisplayButton.setAttribute('title', `(m)`);
 
 function closeWindow() {
   let window = remote.getCurrentWindow();
