@@ -9,7 +9,7 @@ body {
 }
 
 .hidden {
-    /* display: none; */
+    display: none;
 }
 
 #page {
@@ -19,8 +19,12 @@ body {
     align-content: center;
 }
 
-.reader-image {
+.reader-image-spread {
     height: 100vh;
+}
+
+.reader-image-single {
+    height: 200vh;
 }
 
 
