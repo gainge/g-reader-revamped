@@ -8,6 +8,9 @@ const DISPLAY_SPREAD = 0;
 const DISPLAY_SINGLE = 1;
 const ZOOM_STEP = 20;
 const MIN_ZOOM = 100;
+const SINGLE_ZOOM = 200;
+const CLASS_SPREAD_PAGE = 'reader-image-spread';
+const CLASS_SINGLE_PAGE = 'reader-image-single';
 
 var zoomLevel = 0;
 var displayMode = DISPLAY_SPREAD;
@@ -32,7 +35,41 @@ function addShortcuts() {
   Mousetrap.bind('left', () => {showNextPage()});
   Mousetrap.bind('right', () => {showPrevPage()});
   Mousetrap.bind('esc', () => {closeWindow()});
-  Mousetrap.bind('m', () => {console.log('Pressed M! (I think?)')})
+  Mousetrap.bind('m', () => {toggleDisplayMode()})
+}
+
+function toggleDisplayMode() {
+  // Maybe hide both?
+  page1.classList.add('hidden')
+  page2.classList.add('hidden')
+
+  // Conditionally hide
+  if (displayMode === DISPLAY_SPREAD) {
+    displayMode = DISPLAY_SINGLE;
+    // Update the style to single height
+    page1.classList.remove(CLASS_SPREAD_PAGE);
+    page1.classList.add(CLASS_SINGLE_PAGE);
+  } else {
+    displayMode = DISPLAY_SPREAD;
+    // Revert back to spread layout
+    page1.classList.remove(CLASS_SINGLE_PAGE);
+    page1.classList.add(CLASS_SPREAD_PAGE);
+
+  }
+
+  // Display images
+  refreshPages();
+
+  // Show pages if appropriate
+  if (displayMode === DISPLAY_SPREAD) {
+    page2.classList.remove('hidden');
+  }
+  page1.classList.remove('hidden')
+
+}
+
+function refreshPages() {
+  changePage(currentPage);
 }
 
 function getPageStep() {
@@ -55,6 +92,7 @@ function changePage(pageNum) {
     console.log(`Invalid page number: ${pageNum}`);
     return;
   }
+  window.scrollTo(0, 0);
 
   // update current page
   currentPage = pageNum;
