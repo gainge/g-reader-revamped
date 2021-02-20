@@ -141,7 +141,7 @@ function changePage(pageNum) {
   currentPage = pageNum;
 
   // Update page input value
-  pageNumInput.setAttribute('value', currentPage);
+  pageNumInput.value = currentPage;
 
   // change image
   page1.setAttribute('src', images[currentPage]);
