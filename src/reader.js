@@ -161,7 +161,7 @@ ipcRenderer.on('reader-path', (e, imageDir) => {
     images = files.map((file) => path.join(imageDir, file))
 
     // Set page count
-    pageCountLabel.innerHTML = images.length
+    pageCountLabel.innerHTML = images.length - 1
 
     changePage(0); // Display the content!
 
