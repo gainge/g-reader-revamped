@@ -140,6 +140,9 @@ function changePage(pageNum) {
   // update current page
   currentPage = pageNum;
 
+  // Update page input value
+  pageNumInput.setAttribute('value', currentPage);
+
   // change image
   page1.setAttribute('src', images[currentPage]);
   
