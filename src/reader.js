@@ -129,12 +129,15 @@ function showNextPage() {
 
 // Pre-condition that images have been populated
 function changePage(pageNum) {
-  // check bounds
-  if (pageNum < 0 || pageNum >= images.length ||
-      (pageNum === images.length - 1 && displayMode === DISPLAY_SPREAD)) {
-    console.log(`Invalid page number: ${pageNum}`);
-    return;
+  if (pageNum < 0) pageNum = 0; // Floor page number
+  if (pageNum >= images.length) { // Ceiling page number
+    pageNum = images.length - 1;
   }
+  // Check for spread mode overflow
+  if (displayMode === DISPLAY_SPREAD && pageNum == images.length - 1) {
+    pageNum -= 1; // Start display one more page early
+  }
+
   window.scrollTo(0, 0);
 
   // update current page
