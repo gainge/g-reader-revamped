@@ -1,14 +1,18 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
+const Store = require('electron-store');
+const UserData = require('./util/UserData.js')
 
 const SRC_DIR = 'src'
 const INDEX_FILE = 'index.html'
-const READER_FILE = 'reader.html'
+const READER_FILE = 'reader.html';
+
+const store = new Store();
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 500,
-    height: 550,
+    width: 800,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
