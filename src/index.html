@@ -11,13 +11,26 @@
         <h1 id="header">GReader</h1>
     </div>
     <hr>
-    <button id="select-dir-button">Select Directory</button>
-    <br>
-    <p id="selection-label">Selected: <span id="directory-path"></span></p>
-    <button id="open-reader-button">Open Reader</button>
-
-    <br>
-    <!-- <img id="landing-img" src="../assets/images/tsuyu-1.jpg" alt="tsuyu"> -->
+    <div id="directory-select-container">
+        <div id="button-container">
+            <button id="open-reader-button">Open Reader</button>
+            <button id="select-dir-button">Select Directory</button>
+        </div>
+        <div id="selection-label-container">
+            <p id="selection-label">Selected: <span id="directory-path"></span></p>
+        </div>
+    </div>
+    <hr>
+    <div id="lower-pane">
+        <div id="landing-img-container"><img id="landing-img" src="../assets/images/tsuyu-1.jpg" alt="tsuyu"></div>
+        <div id="recents-container">
+            <h2>Recents:</h2>
+            <div id="recents-wrapper">
+            </div>
+        </div>
+    </div>
+    <hr>
+    
 
     <script>require('./index.js')</script>
 </body>
