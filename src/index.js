@@ -2,9 +2,11 @@ const { ipcRenderer } = require('electron')
 const { BrowserWindow } = require('electron').remote
 // const path = require('path');
 const Store = require('electron-store');
+const UserData = require('../util/UserData')
 
 const store = new Store();
-var recents = store.get('recents') || [];
+var recents = store.get(UserData.RECENTS_KEY) || [];
+
 console.log(recents)
 
 var selectedPath = null;
@@ -23,6 +25,8 @@ function saveRecent(path, page) {
     path: path,
     page: page
   })
+
+  store.set(UserData.RECENTS_KEY, recents)
 }
 
 function refreshRecents() {
@@ -51,6 +55,9 @@ function onSelectDirectory(path, page = 0) {
   document.getElementById('directory-path').innerHTML = `${path}`;
 }
 
+ipcRenderer.on('init-UI', (e, args) => {
+  loadRecents(recents);
+})
 
 // Grab a directory?
 selectDirButton.addEventListener('click', (e) => {
@@ -58,6 +65,8 @@ selectDirButton.addEventListener('click', (e) => {
 })
 
 ipcRenderer.on('selected-directory', (event, path) => {
+  if (!path) return;
+
   startingPage = 0; // Directory chosen from dialog, assume starting page of 0
   onSelectDirectory(path)
 })

@@ -25,6 +25,10 @@ function createWindow () {
 
   win.loadURL(indexFile)
 
+  win.webContents.once('dom-ready', () => {
+    win.webContents.send('init-UI');
+  })
+
   ipcMain.on('open-file-dialog', async (event) => {
     const result = await dialog.showOpenDialog(win, {
       properties: ['openDirectory']

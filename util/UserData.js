@@ -1,3 +1,5 @@
+const RECENTS_KEY = 'recents';
+
 function initUserData() {
   return {
     recents: [
@@ -8,4 +10,4 @@ function initUserData() {
   }
 }
 
-module.exports = { initUserData }
+module.exports = { initUserData, RECENTS_KEY }
