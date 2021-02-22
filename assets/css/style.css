@@ -76,6 +76,7 @@ p {
 }
 
 #recents-wrapper>p {
+    font-size: 0.8em;
     background-color: #f0f8ff;
     margin: 0;
     padding: 0.5rem;
