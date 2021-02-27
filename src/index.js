@@ -16,6 +16,24 @@ const recentsParent = document.getElementById('recents-wrapper');
 const selectDirButton = document.getElementById('select-dir-button');
 const openReaderButton = document.getElementById('open-reader-button');
 
+function getStartingPage(dir) {
+  let recents = store.get(UserData.RECENTS_KEY) || [];
+  console.log(`Searching for ${dir}`);
+
+  let startingPage = 0;
+
+  recents.forEach( (entry) => {
+    if (entry.path === dir) {
+      console.log('found matching entry')
+      startingPage = entry.page;
+    }
+  })
+
+  console.log(`index starting page: ${startingPage}`)
+
+  return startingPage;
+}
+
 function saveRecent(path, page) {
   // Remove the recents entry if applicable
   recents = recents.filter( (entry) => entry.path !== path);
@@ -48,7 +66,7 @@ function loadRecents(recents) {
 
 function onSelectDirectory(path, page = 0) {
   selectedPath = path;
-  startingPage = page;
+  startingPage =  page || getStartingPage(selectedPath); // Attempt to read from recents
 
   console.log(`user selected: [${path}]`);
   console.log(`starting from page: [${page}]`);
@@ -67,7 +85,6 @@ selectDirButton.addEventListener('click', (e) => {
 ipcRenderer.on('selected-directory', (event, path) => {
   if (!path) return;
 
-  startingPage = 0; // Directory chosen from dialog, assume starting page of 0
   onSelectDirectory(path)
 })
 

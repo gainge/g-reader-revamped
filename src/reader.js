@@ -3,6 +3,9 @@ const { ipcRenderer } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const Mousetrap = require('mousetrap');
+const Store = require('electron-store');
+
+const UserData = require('../util/UserData')
 
 const DISPLAY_SPREAD = 0;
 const DISPLAY_SINGLE = 1;
@@ -15,8 +18,11 @@ const CLASS_SINGLE_PAGE = 'reader-image-single';
 var zoomLevel = 0;
 var displayMode = DISPLAY_SPREAD;
 var pageStep = displayMode === DISPLAY_SPREAD ? 2 : 1;
+var selectedDir = null;
 var currentPage = 0; // TODO: allow for saved page num from recents
 var images = null;
+
+const store = new Store();
 
 const page1 = document.getElementById('page-1');
 const page2 = document.getElementById('page-2');
@@ -36,7 +42,22 @@ toggleDisplayButton.addEventListener('click', (e) => {
 })
 toggleDisplayButton.setAttribute('title', `(m)`);
 
+function saveCurrentPage() {
+  let recents = store.get(UserData.RECENTS_KEY) || [];
+
+  // Update the page attribute
+  recents.forEach( (entry) => {
+    if (entry.path === selectedDir) {
+      entry.page = currentPage;
+    }
+  });
+
+  store.set(UserData.RECENTS_KEY, recents)
+}
+
 function closeWindow() {
+  saveCurrentPage()
+
   let window = remote.getCurrentWindow();
   window.close();
 }
@@ -154,9 +175,11 @@ function changePage(pageNum) {
   }
 }
 
-ipcRenderer.on('reader-path', (e, imageDir) => {
+ipcRenderer.on('reader-path', (e, imageDir, startingPage = 0) => {
   console.log(`Reader window received ${imageDir}`);
-  console.log(typeof(imageDir))
+  console.log(`Starting Page: ${startingPage}`)
+  selectedDir = imageDir;
+  currentPage = startingPage; // TODO: add confirmation window
 
   fs.readdir(imageDir, (error, files) => {
     console.log(files)
@@ -166,7 +189,7 @@ ipcRenderer.on('reader-path', (e, imageDir) => {
     // Set page count
     pageCountLabel.innerHTML = images.length - 1
 
-    changePage(0); // Display the content!
+    changePage(currentPage); // Display the content!
 
     addShortcuts();
   })

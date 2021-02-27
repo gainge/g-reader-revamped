@@ -37,13 +37,14 @@ function createWindow () {
     console.log('directories selected', result.filePaths)
 
     if (result && result.filePaths) { // TODO: also check dir is not empty somewhere? maybe not in main
-      event.sender.send('selected-directory', result.filePaths[0])
+      let selectedDir = result.filePaths[0];
+      event.sender.send('selected-directory', selectedDir)
     } else {
       dialog.showErrorBox('Directory Selection', `Something went wrong selecting directory ${result.filePaths}`)
     }
   })
 
-  ipcMain.on('show-reader-window', (e, imageDir) => {
+  ipcMain.on('show-reader-window', (e, imageDir, startingPage) => {
     const readerWindowPath = path.join('file://', __dirname, SRC_DIR, READER_FILE)
     let win = new BrowserWindow({
       width: 1920, 
@@ -62,7 +63,7 @@ function createWindow () {
     win.loadURL(readerWindowPath)
 
     win.webContents.once('dom-ready', () => {
-      win.webContents.send('reader-path', imageDir);
+      win.webContents.send('reader-path', imageDir, startingPage);
     })
 
     win.once('ready-to-show', () => {
