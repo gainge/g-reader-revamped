@@ -43,16 +43,18 @@ toggleDisplayButton.addEventListener('click', (e) => {
 toggleDisplayButton.setAttribute('title', `(m)`);
 
 function saveCurrentPage() {
-  let recents = store.get(UserData.RECENTS_KEY) || [];
+  ipcRenderer.send('update-recent-page', selectedDir, currentPage);
 
-  // Update the page attribute
-  recents.forEach( (entry) => {
-    if (entry.path === selectedDir) {
-      entry.page = currentPage;
-    }
-  });
+  // let recents = store.get(UserData.RECENTS_KEY) || [];
 
-  store.set(UserData.RECENTS_KEY, recents)
+  // // Update the page attribute
+  // recents.forEach( (entry) => {
+  //   if (entry.path === selectedDir) {
+  //     entry.page = currentPage;
+  //   }
+  // });
+
+  // store.set(UserData.RECENTS_KEY, recents)
 }
 
 function closeWindow() {

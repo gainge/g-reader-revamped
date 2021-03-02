@@ -9,6 +9,21 @@ const READER_FILE = 'reader.html';
 
 const store = new Store();
 
+function saveRecent(path, page) {
+  let recents = store.get(UserData.RECENTS_KEY) || [];
+
+  // Remove the recents entry if applicable
+  recents = recents.filter( (entry) => entry.path !== path);
+
+  // Add the current directory to the front of the recents array
+  recents.unshift({
+    path: path,
+    page: page
+  })
+
+  store.set(UserData.RECENTS_KEY, recents)
+}
+
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
@@ -70,6 +85,13 @@ function createWindow () {
       win.show();
     })
     
+  })
+
+  ipcMain.on('update-recent-page', (e, imageDir, updatedPage) => {
+    saveRecent(imageDir, updatedPage);
+
+    // Update the recents list in index.html
+    win.webContents.send('refresh-UI');
   })
 
 }

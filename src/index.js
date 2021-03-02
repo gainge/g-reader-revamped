@@ -15,6 +15,7 @@ var startingPage = 0;
 const recentsParent = document.getElementById('recents-wrapper');
 const selectDirButton = document.getElementById('select-dir-button');
 const openReaderButton = document.getElementById('open-reader-button');
+const directoryPathLabel = document.getElementById('directory-path');
 
 function getStartingPage(dir) {
   let recents = store.get(UserData.RECENTS_KEY) || [];
@@ -34,25 +35,14 @@ function getStartingPage(dir) {
   return startingPage;
 }
 
-function saveRecent(path, page) {
-  // Remove the recents entry if applicable
-  recents = recents.filter( (entry) => entry.path !== path);
-
-  // Add the current directory to the front of the recents array
-  recents.unshift({
-    path: path,
-    page: page
-  })
-
-  store.set(UserData.RECENTS_KEY, recents)
-}
-
 function refreshRecents() {
   recentsParent.innerHTML = "";
-  loadRecents(recents);
+  loadRecents();
 }
 
-function loadRecents(recents) {
+function loadRecents() {
+  recents = store.get(UserData.RECENTS_KEY) || [];
+
   recents.forEach(entry => {
     const listItem = document.createElement('p');
     listItem.innerHTML = entry.path;
@@ -70,11 +60,21 @@ function onSelectDirectory(path, page = 0) {
 
   console.log(`user selected: [${path}]`);
   console.log(`starting from page: [${page}]`);
-  document.getElementById('directory-path').innerHTML = `${path}`;
+  directoryPathLabel.innerHTML = `${path}`;
+  openReaderButton.disabled = false;
 }
 
 ipcRenderer.on('init-UI', (e, args) => {
-  loadRecents(recents);
+  loadRecents();
+})
+
+ipcRenderer.on('refresh-UI', (e, args) => {
+  // reset selections and update UI accordingly
+  selectedPath = null;
+  startingPage = 0;
+  directoryPathLabel.innerHTML = "";
+  openReaderButton.disabled = true;
+  refreshRecents();
 })
 
 // Grab a directory?
@@ -93,7 +93,7 @@ ipcRenderer.on('selected-directory', (event, path) => {
 // Communicate to main that the reader window should be opened
 openReaderButton.addEventListener('click', (e) => {
   // Save the currently selected path as a recent entry
-  saveRecent(selectedPath, startingPage);
+  // saveRecent(selectedPath, startingPage); // TODO: take this out and only update recents via ipc from main
   refreshRecents();
 
   ipcRenderer.send('show-reader-window', selectedPath, startingPage);
