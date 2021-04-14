@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const Mousetrap = require('mousetrap');
 const Store = require('electron-store');
+const sizeOf = require('image-size')
 
 const UserData = require('../util/UserData')
 
@@ -21,6 +22,7 @@ var pageStep = displayMode === DISPLAY_SPREAD ? 2 : 1;
 var selectedDir = null;
 var currentPage = 0; // TODO: allow for saved page num from recents
 var images = null;
+var dimensions = [];
 
 const store = new Store();
 
@@ -187,6 +189,9 @@ ipcRenderer.on('reader-path', (e, imageDir, startingPage = 0) => {
     console.log(files)
     // Create our array of full image paths
     images = files.map((file) => path.join(imageDir, file))
+
+    // Store image dimensions as array of objects
+    dimensions = images.map(image => sizeOf(image));
 
     // Set page count
     pageCountLabel.innerHTML = images.length - 1
