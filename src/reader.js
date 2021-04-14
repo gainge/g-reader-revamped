@@ -78,8 +78,23 @@ jumpPageButton.addEventListener('click', (e) => {
 
 
 /* Helper Functions */
+
+function _pageNumIsSpread(pageNum) {
+  return _imageIsSpread(dimensions[pageNum])
+}
+
 function _imageIsSpread(imageDimensions) {
   return imageDimensions.width > imageDimensions.height;
+}
+
+
+function _getDisplayMode(pageNum) {
+  if (_pageNumIsSpread(pageNum) || 
+      (pageNum < images.length - 1) && _pageNumIsSpread(pageNum + 1)) {
+        return DISPLAY_SINGLE // Force singe display when viewing spread singles or just before
+  } else {
+    return displayMode; // Defer to state otherwise
+  } 
 }
 
 function jumpPage() {
@@ -109,12 +124,24 @@ function addShortcuts() {
   Mousetrap.bind('m', () => {toggleDisplayMode()})
 }
 
-function toggleDisplayMode() {
-  // Maybe hide both?
+function hideImages() {
   page1.classList.add('hidden')
   page2.classList.add('hidden')
+}
 
-  // Conditionally hide
+function showImages() {
+  // Show pages if appropriate
+  if (_getDisplayMode(currentPage) === DISPLAY_SPREAD) {
+    page2.classList.remove('hidden');
+  }
+  page1.classList.remove('hidden')
+}
+
+function toggleDisplayMode() {
+  // Maybe hide both?
+  hideImages();
+
+  // Conditionally show w/ custom styling
   if (displayMode === DISPLAY_SPREAD) {
     displayMode = DISPLAY_SINGLE;
     // Update the style to single height
@@ -131,12 +158,7 @@ function toggleDisplayMode() {
   // Display images
   refreshPages();
 
-  // Show pages if appropriate
-  if (displayMode === DISPLAY_SPREAD) {
-    page2.classList.remove('hidden');
-  }
-  page1.classList.remove('hidden')
-
+  showImages();
 }
 
 function refreshPages() {
@@ -148,15 +170,35 @@ function getPageStep() {
 }
 
 function showPrevPage() {
-  changePage(currentPage - getPageStep())
+  let pageStep = getPageStep();
+
+  console.log(`start show prev page w/ step of ${pageStep}`);
+
+  if (currentPage > 0 && _pageNumIsSpread(currentPage - 1)) {
+    console.log(`prev page was spread, only step back one`);
+    // Previous page was spread, only go back 1
+    pageStep = 1;
+  }
+
+  changePage(currentPage - pageStep);
 }
 
 function showNextPage() {
-  changePage(currentPage + getPageStep())
+  let pageStep = getPageStep();
+
+  if ((currentPage < images.length - 1 && _pageNumIsSpread(currentPage + 1)) ||
+      _pageNumIsSpread(currentPage)) {
+    // Always advance 1 page following a spread and immediately before a spread
+    pageStep = 1;
+  }
+
+  changePage(currentPage + pageStep);
 }
 
 // Pre-condition that images have been populated
 function changePage(pageNum) {
+  hideImages();
+
   if (pageNum < 0) pageNum = 0; // Floor page number
   if (pageNum >= images.length) { // Ceiling page number
     pageNum = images.length - 1;
@@ -177,9 +219,11 @@ function changePage(pageNum) {
   // change image
   page1.setAttribute('src', images[currentPage]);
   
-  if (displayMode === DISPLAY_SPREAD) {
+  if (_getDisplayMode(currentPage) === DISPLAY_SPREAD) {
     page2.setAttribute('src', images[currentPage + 1]);
   }
+
+  showImages();
 }
 
 ipcRenderer.on('reader-path', (e, imageDir, startingPage = 0) => {
