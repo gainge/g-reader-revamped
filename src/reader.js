@@ -78,7 +78,7 @@ jumpPageButton.addEventListener('click', (e) => {
 
 
 /* Helper Functions */
-function _isSpread(imageDimensions) {
+function _imageIsSpread(imageDimensions) {
   return imageDimensions.width > imageDimensions.height;
 }
 
