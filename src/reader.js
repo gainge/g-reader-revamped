@@ -78,6 +78,9 @@ jumpPageButton.addEventListener('click', (e) => {
 
 
 /* Helper Functions */
+function _isSpread(imageDimensions) {
+  return imageDimensions.width > imageDimensions.height;
+}
 
 function jumpPage() {
   let pageVal = pageNumInput.value;
