@@ -28,6 +28,7 @@ const store = new Store();
 
 const page1 = document.getElementById('page-1');
 const page2 = document.getElementById('page-2');
+const pageSpread = document.getElementById('page-spread');
 const closeButton = document.getElementById('close-reader-button');
 const toggleDisplayButton = document.getElementById('toggle-display-button');
 const pageNumInput = document.getElementById('page-num-input');
@@ -127,6 +128,7 @@ function addShortcuts() {
 function hideImages() {
   page1.classList.add('hidden')
   page2.classList.add('hidden')
+  pageSpread.classList.add('hidden')
 }
 
 function showImages() {
@@ -135,6 +137,10 @@ function showImages() {
     page2.classList.remove('hidden');
   }
   page1.classList.remove('hidden')
+}
+
+function showSpread() {
+  pageSpread.classList.remove('hidden');
 }
 
 function toggleDisplayMode() {
@@ -217,13 +223,19 @@ function changePage(pageNum) {
   pageNumInput.value = currentPage;
 
   // change image
-  page1.setAttribute('src', images[currentPage]);
-  
-  if (_getDisplayMode(currentPage) === DISPLAY_SPREAD) {
-    page2.setAttribute('src', images[currentPage + 1]);
-  }
+  if (_pageNumIsSpread(currentPage)) {
+    pageSpread.setAttribute('src', images[currentPage]);
 
-  showImages();
+    showSpread();
+  } else {
+    page1.setAttribute('src', images[currentPage]);
+  
+    if (_getDisplayMode(currentPage) === DISPLAY_SPREAD) {
+      page2.setAttribute('src', images[currentPage + 1]);
+    }
+
+    showImages();
+  }
 }
 
 ipcRenderer.on('reader-path', (e, imageDir, startingPage = 0) => {
