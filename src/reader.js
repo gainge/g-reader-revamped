@@ -226,18 +226,22 @@ function changePage(pageNum) {
 
   // change image
   if (_pageNumIsSpread(currentPage)) {
-    pageSpread.setAttribute('src', images[currentPage]);
+    pageSpread.setAttribute('src', sanitizeImageUrl(images[currentPage]));
 
     showSpread();
   } else {
-    page1.setAttribute('src', images[currentPage]);
+    page1.setAttribute('src', sanitizeImageUrl(images[currentPage]));
   
     if (_getDisplayMode(currentPage) === DISPLAY_SPREAD) {
-      page2.setAttribute('src', images[currentPage + 1]);
+      page2.setAttribute('src', sanitizeImageUrl(images[currentPage + 1]));
     }
 
     showImages();
   }
+}
+
+function sanitizeImageUrl(url) {
+  return url.replaceAll('#', encodeURIComponent('#'));
 }
 
 ipcRenderer.on('reader-path', (e, imageDir, startingPage = 0) => {
