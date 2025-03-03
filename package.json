@@ -11,7 +11,7 @@
   "author": "Gibson Ainge",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^11.2.3"
+    "electron": "^11.5.0"
   },
   "dependencies": {
     "electron-localshortcut": "^3.2.1",
