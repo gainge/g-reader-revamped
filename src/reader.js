@@ -121,6 +121,8 @@ function isInt(value) {
 function addShortcuts() {
   Mousetrap.bind('left', () => {showNextPage()});
   Mousetrap.bind('right', () => {showPrevPage()});
+  Mousetrap.bind('z', () => {showNextPage()});
+  Mousetrap.bind('x', () => {showPrevPage()});
   Mousetrap.bind('esc', () => {closeWindow()});
   Mousetrap.bind('m', () => {toggleDisplayMode()})
 }
